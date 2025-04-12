@@ -11,7 +11,6 @@ LangFile::loadMessages(__FILE__, "AMMINA_STOPVIRUS_INSTALL");
 class ammina_stopvirus extends CModule
 {
 	public $errors = false;
-
 	/**
 	 * @throws Main\IO\InvalidPathException
 	 */
@@ -27,8 +26,8 @@ class ammina_stopvirus extends CModule
 		$this->MODULE_NAME = LangFile::message("MODULE_NAME");
 		$this->MODULE_DESCRIPTION = LangFile::message("MODULE_DESC");
 
-		$this->PARTNER_NAME = LangFile::message("PARTNER_NAME");
-		$this->PARTNER_URI = LangFile::message("PARTNER_URI");
+		$this->PARTNER_NAME = GetMessage('AMMINA_STOPVIRUS_INSTALL_PARTNER_NAME');// LangFile::message("PARTNER_NAME");
+		$this->PARTNER_URI = GetMessage('AMMINA_STOPVIRUS_INSTALL_PARTNER_URI');//LangFile::message("PARTNER_URI");
 	}
 
 	/**
