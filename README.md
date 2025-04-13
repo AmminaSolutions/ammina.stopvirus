@@ -16,7 +16,10 @@
     - Перейти по ссылке на страницу модуля: https://marketplace.1c-bitrix.ru/solutions/ammina.stopvirus/
     - Нажмите кнопку "Установить" и установите модуль на сайт
 
-2. Через GitHub:
+2. В административной части сайта:
+    - В ссылке https://ВАШ_ДОМЕН/bitrix/admin/update_system_partner.php?addmodule=ammina.stopvirus укажите домен вашего сайта и установите модуль
+
+3. Через GitHub:
    - Скачайте архив с модулем по ссылке https://github.com/AmminaSolutions/ammina.stopvirus/archive/refs/heads/main.zip
    - В админке вашего сайта перейдите на страницу Контент -> Структура сайта -> Файлы и папки -> bitrix -> modules
    - Нажмите кнопку "Загрузить файл"
