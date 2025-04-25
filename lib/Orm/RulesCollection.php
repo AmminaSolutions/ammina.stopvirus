@@ -4,7 +4,7 @@ namespace Ammina\StopVirus\Orm;
 
 use Ammina\StopVirus;
 
-class Attempts extends StopVirus\Db\EO_Attempts
+class RulesCollection extends StopVirus\Db\EO_Rules_Collection
 {
 
 }

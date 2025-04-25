@@ -1,7 +1,13 @@
 <?php
 
 include_once(dirname(__DIR__) . '/constants.php');
-\Bitrix\Main\Loader::registerNamespace("Ammina\\StopVirus", AMMINA_STOPVIRUS_ROOT . "/lib");
+//for bitrix 18
+$loaderParams = (new ReflectionClass(\Bitrix\Main\Loader::class))->getMethod('registerNamespace')->getParameters();
+if (count($loaderParams) === 3) {
+	\Bitrix\Main\Loader::registerNamespace("Ammina\\StopVirus", 'ammina.stopvirus', AMMINA_STOPVIRUS_ROOT . "/lib");
+} else {
+	\Bitrix\Main\Loader::registerNamespace("Ammina\\StopVirus", AMMINA_STOPVIRUS_ROOT . "/lib");
+}
 
 use Ammina\StopVirus\LangFile;
 use \Bitrix\Main;
@@ -11,18 +17,19 @@ LangFile::loadMessages(__FILE__, "AMMINA_STOPVIRUS_INSTALL");
 class ammina_stopvirus extends CModule
 {
 	public $errors = false;
+
 	/**
 	 * @throws Main\IO\InvalidPathException
 	 */
 	public function __construct()
 	{
 		/**
-		 * @var array $moduleVersion
+		 * @var array $arModuleVersion
 		 */
 		include(__DIR__ . "/version.php");
 		$this->MODULE_ID = 'ammina.stopvirus';
-		$this->MODULE_VERSION = $moduleVersion["VERSION"];
-		$this->MODULE_VERSION_DATE = $moduleVersion["VERSION_DATE"];
+		$this->MODULE_VERSION = $arModuleVersion["VERSION"];
+		$this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
 		$this->MODULE_NAME = LangFile::message("MODULE_NAME");
 		$this->MODULE_DESCRIPTION = LangFile::message("MODULE_DESC");
 

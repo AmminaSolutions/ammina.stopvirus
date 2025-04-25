@@ -196,6 +196,11 @@ $arHeader = [
 		"content" => LangFile::message("FIELD_FROM_USER_AGENT"),
 		"default" => true,
 	],
+	[
+		"id" => "MATCH_SIGNATURES",
+		"content" => LangFile::message("FIELD_MATCH_SIGNATURES"),
+		"default" => true,
+	],
 ];
 
 $lAdmin->AddHeaders($arHeader);
@@ -224,6 +229,9 @@ while ($arData = $rsItems->NavNext()) {
 		$row->AddViewField('ID', $arData['ID'] . '<style>.main-grid-row-body[data-id="' . $arData['ID'] . '"] > td {background-color: #ffe4e4;}</style>');
 	}
 	$row->AddViewField('IS_DETECT_VIRUS', $arData['IS_DETECT_VIRUS'] === 'Y' ? LangFile::message('FIELD_IS_DETECT_VIRUS_VALUE_Y') : LangFile::message('FIELD_IS_DETECT_VIRUS_VALUE_N'));
+	if (in_array('MATCH_SIGNATURES', $arSelected)) {
+		$row->AddViewField('MATCH_SIGNATURES', nl2br(htmlspecialchars(implode("\n", $arData['MATCH_SIGNATURES'] ?? []))));
+	}
 
 	$arActions = [];
 	if ($modulePermissions >= "R") {

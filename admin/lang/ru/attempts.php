@@ -33,6 +33,7 @@ $messages = [
 		'FROM_IP' => 'IP адрес посетителя',
 		'FROM_HOST' => 'Хост посетителя',
 		'FROM_USER_AGENT' => 'User agent посетителя',
+		'MATCH_SIGNATURES' => 'Сработавшие сигнатуры',
 	],
 	'ACTION' => [
 		'VIEW' => 'Просмотр',

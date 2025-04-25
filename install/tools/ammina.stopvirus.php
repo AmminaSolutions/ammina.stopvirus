@@ -4,4 +4,6 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/modules/ammina.stopvirus')) 
 } else {
 	include_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/ammina.stopvirus/constants.php');
 }
-include_once(AMMINA_STOPVIRUS_ROOT . '/run.php');
+if (defined("AMMINA_STOPVIRUS_ROOT")) {
+	include_once(AMMINA_STOPVIRUS_ROOT . '/run.php');
+}

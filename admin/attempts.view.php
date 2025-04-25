@@ -126,6 +126,7 @@ $tabControl->AddViewField('SCRIPT_FILENAME', LangFile::message('FIELD_SCRIPT_FIL
 $tabControl->AddViewField('FROM_IP', LangFile::message('FIELD_FROM_IP') . ':', $currentItem->getFromIp());
 $tabControl->AddViewField('FROM_HOST', LangFile::message('FIELD_FROM_HOST') . ':', $currentItem->getFromHost());
 $tabControl->AddViewField('FROM_USER_AGENT', LangFile::message('FIELD_FROM_USER_AGENT') . ':', $currentItem->getFromUserAgent());
+$tabControl->AddViewField('MATCH_SIGNATURES', LangFile::message('FIELD_MATCH_SIGNATURES') . ':', nl2br(htmlspecialchars(implode("\n", $currentItem->getMatchSignatures() ?? []))) . '&nbsp');
 
 $tabControl->BeginNextFormTab();
 
@@ -145,7 +146,7 @@ foreach ($data as $header => $value) {
 	<tr>
 		<td colspan="2">
 			<div class="ammina-format-virusstop">
-				<?= (Ammina\StopVirus\Detector::getInstance())->formatContent(implode("\n", $content)) ?>
+				<?= (Ammina\StopVirus\Detector::getInstance())->formatContent(implode("\n", $content), $currentItem->getMatchSignatures()) ?>
 			</div>
 		</td>
 	</tr>
@@ -156,12 +157,12 @@ $tabControl->BeginNextFormTab();
 $tabControl->BeginCustomField('DATA_BODY', LangFile::message('FIELD_DATA_BODY'), false);
 ?>
 	<tr class="heading">
-		<td colspan="2"><?= LangFile::message('FIELD_DATA_HEADER') ?></td>
+		<td colspan="2"><?= LangFile::message('FIELD_DATA_BODY') ?></td>
 	</tr>
 	<tr>
 		<td colspan="2">
 			<div class="ammina-format-virusstop">
-				<?= (\Ammina\StopVirus\Detector::getInstance())->formatContent($currentItem->getDataBody()['content'] ?? '') ?>
+				<?= (\Ammina\StopVirus\Detector::getInstance())->formatContent($currentItem->getDataBody()['content'] ?? '', $currentItem->getMatchSignatures()) ?>
 			</div>
 		</td>
 	</tr>
@@ -177,7 +178,7 @@ $tabControl->BeginCustomField('DATA_QUERY', LangFile::message('FIELD_DATA_QUERY'
 	<tr>
 		<td colspan="2">
 			<div class="ammina-format-virusstop">
-				<?= (\Ammina\StopVirus\Detector::getInstance())->formatContent($currentItem->getDataQuery()['content'] ?? '') ?>
+				<?= (\Ammina\StopVirus\Detector::getInstance())->formatContent($currentItem->getDataQuery()['content'] ?? '', $currentItem->getMatchSignatures()) ?>
 			</div>
 		</td>
 	</tr>

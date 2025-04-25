@@ -79,7 +79,10 @@ class AttemptsTable extends Main\ORM\Data\DataManager
 				'nullable' => true,
 			]))
 				->configureSerializationJson(),
-
+			(new Main\Orm\Fields\ArrayField('MATCH_SIGNATURES', [
+				'nullable' => true,
+			]))
+				->configureSerializationJson(),
 		];
 	}
 

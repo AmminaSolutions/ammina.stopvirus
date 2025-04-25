@@ -53,17 +53,6 @@ class Settings
 		return $this;
 	}
 
-	public function optionStoreAll(): bool
-	{
-		return \COption::GetOptionString("ammina.stopvirus", "store_all", 'N') === 'Y';
-	}
-
-	public function setOptionStoreAll(bool $storeAll): self
-	{
-		\COption::SetOptionString("ammina.stopvirus", "store_all", $storeAll ? 'Y' : 'N');
-		return $this;
-	}
-
 	public function optionTtlDetected(): int
 	{
 		return \COption::GetOptionInt("ammina.stopvirus", "ttl_detected", '365');
@@ -100,28 +89,6 @@ class Settings
 	public function setOptionMessage(string $message): self
 	{
 		\COption::SetOptionString("ammina.stopvirus", "message", trim($message));
-		return $this;
-	}
-
-	public function optionAllowSystemRequests(): bool
-	{
-		return \COption::GetOptionString("ammina.stopvirus", "allow.system.requests", 'N') === 'Y';
-	}
-
-	public function setOptionAllowSystemRequests(bool $allowSystemRequests): self
-	{
-		\COption::SetOptionString("ammina.stopvirus", "allow.system.requests", $allowSystemRequests ? 'Y' : 'N');
-		return $this;
-	}
-
-	public function optionDisableBlockRequests(): bool
-	{
-		return \COption::GetOptionString("ammina.stopvirus", "disable.block.requests", 'N') === 'Y';
-	}
-
-	public function setOptionDisableBlockRequests(bool $disableBlockRequests): self
-	{
-		\COption::SetOptionString("ammina.stopvirus", "disable.block.requests", $disableBlockRequests ? 'Y' : 'N');
 		return $this;
 	}
 
@@ -215,5 +182,69 @@ class Settings
 				);
 			}
 		}
+	}
+
+	public function optionDbVersion(): string
+	{
+		return \COption::GetOptionString("ammina.stopvirus", "db.version", '1.0.0');
+	}
+
+	public function setOptionDbVersion(string $dbVersion): self
+	{
+		\COption::SetOptionString("ammina.stopvirus", "db.version", $dbVersion);
+		return $this;
+	}
+
+	public function moduleVersion(): string
+	{
+		return trim(file_get_contents(AMMINA_STOPVIRUS_ROOT . '/version'));
+	}
+
+	public function isStartedDbMigration(): bool
+	{
+		if (\COption::GetOptionString("ammina.stopvirus", "db.migration.start", 'N') === 'Y' && ((time() - \COption::GetOptionInt("ammina.stopvirus", "db.migration.start.time", 0)) < 60)) {
+			return true;
+		}
+		return false;
+	}
+
+	public function startDbMigration(): self
+	{
+		\COption::SetOptionString("ammina.stopvirus", "db.migration.start", 'Y');
+		\COption::SetOptionInt("ammina.stopvirus", "db.migration.start.time", time());
+		return $this;
+	}
+
+	public function endtDbMigration(): self
+	{
+		\COption::SetOptionString("ammina.stopvirus", "db.migration.start", 'N');
+		return $this;
+	}
+
+	public function detectOldCodeFromForumInBitrixInit(): bool
+	{
+		if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/bitrix/php_interface/init.php')) {
+			return $this->detectOldCodeFromForum(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/bitrix/php_interface/init.php'));
+		}
+		return false;
+	}
+
+	public function detectOldCodeFromForumInLocalInit(): bool
+	{
+		if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/init.php')) {
+			return $this->detectOldCodeFromForum(file_get_contents($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/init.php'));
+		}
+		return false;
+	}
+
+	protected function detectOldCodeFromForum($content): bool
+	{
+		if (strpos($content, 'mb_strtolower(file_get_contents(\'php://input\'))') !== false) {
+			return true;
+		}
+		if (strpos($content, 'strpos($cont, \'file_put_contents\')') !== false) {
+			return true;
+		}
+		return false;
 	}
 }

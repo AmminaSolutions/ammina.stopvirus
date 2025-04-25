@@ -44,6 +44,7 @@ $messages = [
 		'DATA_HEADER' => 'Заголовки запроса',
 		'DATA_QUERY' => 'Строка запроса',
 		'DATA_BODY' => 'Тело POST-запроса',
+		'MATCH_SIGNATURES' => 'Сработавшие сигнатуры',
 	],
 ];
 

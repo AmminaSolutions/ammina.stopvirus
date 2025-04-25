@@ -42,16 +42,6 @@ $aTabs = [
 		'TAB' => LangFile::message('TAB_EDIT1_TAB'),
 		'TITLE' => LangFile::message('TAB_EDIT1_TITLE'),
 	],
-	[
-		'DIV' => 'edit2',
-		'TAB' => LangFile::message('TAB_EDIT2_TAB'),
-		'TITLE' => LangFile::message('TAB_EDIT2_TITLE'),
-	],
-	[
-		'DIV' => 'edit3',
-		'TAB' => LangFile::message('TAB_EDIT3_TAB'),
-		'TITLE' => LangFile::message('TAB_EDIT3_TITLE'),
-	],
 ];
 $tabControl = new CAdminForm($sTabID, $aTabs);
 
@@ -65,12 +55,9 @@ if ($isSavingOperation) {
 	(Settings::getInstance())
 		->setOptionActive($request->get('ACTIVE') === 'Y')
 		->setOptionStoreHost($request->get('STORE_HOST') === 'Y')
-		->setOptionStoreAll($request->get('STORE_ALL') === 'Y')
 		->setOptionTtlDetected((int)$request->get('TTL_DETECTED'))
 		->setOptionTtlNoDetected((int)$request->get('TTL_NO_DETECTED'))
-		->setOptionMessage($request->get('MESSAGE'))
-		->setOptionAllowSystemRequests($request->get('ALLOW_SYSTEM_REQUESTS') === 'Y')
-		->setOptionDisableBlockRequests($request->get('DISABLE_BLOCK_REQUESTS') === 'Y');
+		->setOptionMessage($request->get('MESSAGE'));
 
 	if (!empty($save)) {
 		LocalRedirect($pageLinkList . "?lang=" . LANGUAGE_ID);
@@ -154,34 +141,52 @@ if ((Settings::getInstance())->detectRunFileInclude()) {
 }
 $tabControl->EndCustomField('DETECT_FILE_INCLUDE');
 
+$detectOldBitrixInit = (Settings::getInstance())->detectOldCodeFromForumInBitrixInit();
+$detectOldLocalInit = (Settings::getInstance())->detectOldCodeFromForumInLocalInit();
+if ($detectOldBitrixInit || $detectOldLocalInit) {
+	$tabControl->BeginCustomField('DETECT_OLDCODE_INCLUDE', LangFile::message('FIELD_DETECT_OLDCODE_INCLUDE'), false);
+	?>
+	<tr>
+		<td colspan="2">
+			<div style="display:flex; justify-content: center;">
+				<?
+				if ($detectOldBitrixInit) {
+					\CAdminMessage::ShowMessage([
+						'MESSAGE' => LangFile::message('FIELD_DETECT_OLDCODE_ERROR_BITRIX'),
+						'TYPE' => 'ERROR',
+					]);
+				}
+				if ($detectOldLocalInit) {
+					\CAdminMessage::ShowMessage([
+						'MESSAGE' => LangFile::message('FIELD_DETECT_OLDCODE_ERROR_LOCAL'),
+						'TYPE' => 'ERROR',
+					]);
+				}
+				?>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<div style="display:flex; justify-content: center;">
+				<pre style="display:block;margin:0 auto;max-width: 800px;white-space: pre-wrap">
+					<h2><?= LangFile::message('FIELD_OLD_CODE_TITLE') ?></h2>
+					<div style="background-color:#333333;color:#ffffff;padding:8px;">
+				<?= LangFile::message('FIELD_OLD_CODE') ?>
+						</div>
+					</pre>
+			</div>
+		</td>
+	</tr>
+	<?
+	$tabControl->EndCustomField('DETECT_OLDCODE_INCLUDE');
+}
+
 $tabControl->AddCheckBoxField('ACTIVE', LangFile::message('FIELD_ACTIVE') . ':', false, 'Y', (Settings::getInstance())->optionActive());
 $tabControl->AddCheckBoxField('STORE_HOST', LangFile::message('FIELD_STORE_HOST') . ':', false, 'Y', (Settings::getInstance())->optionStoreHost());
-$tabControl->AddCheckBoxField('STORE_ALL', LangFile::message('FIELD_STORE_ALL') . ':', false, 'Y', (Settings::getInstance())->optionStoreAll());
 $tabControl->AddEditField('TTL_DETECTED', LangFile::message('FIELD_TTL_DETECTED') . ':', false, ["size" => 10, "maxlength" => 10], (Settings::getInstance())->optionTtlDetected());
 $tabControl->AddEditField('TTL_NO_DETECTED', LangFile::message('FIELD_TTL_NO_DETECTED') . ':', false, ["size" => 10, "maxlength" => 10], (Settings::getInstance())->optionTtlNoDetected());
 $tabControl->AddEditField('MESSAGE', LangFile::message('FIELD_MESSAGE') . ':', false, ["size" => 50, "maxlength" => 255], (Settings::getInstance())->optionMessage());
-$tabControl->AddCheckBoxField('ALLOW_SYSTEM_REQUESTS', LangFile::message('FIELD_ALLOW_SYSTEM_REQUESTS') . ':', false, 'Y', (Settings::getInstance())->optionAllowSystemRequests());
-$tabControl->AddCheckBoxField('DISABLE_BLOCK_REQUESTS', LangFile::message('FIELD_DISABLE_BLOCK_REQUESTS') . ':', false, 'Y', (Settings::getInstance())->optionDisableBlockRequests());
-
-$tabControl->BeginNextFormTab();
-$tabControl->BeginCustomField('INSTRUCTION', LangFile::message('FIELD_INSTRUCTION'), false);
-?>
-	<tr>
-		<td colspan="2"><?= LangFile::message('FIELD_INSTRUCTION_TEXT') ?></td>
-	</tr>
-<?
-$tabControl->EndCustomField('INSTRUCTION');
-
-$tabControl->BeginNextFormTab();
-$tabControl->BeginCustomField('RECOMMENDED', LangFile::message('FIELD_RECOMMENDED'), false);
-?>
-	<tr>
-		<td colspan="2"><?= LangFile::message('FIELD_RECOMMENDED_TEXT') ?></td>
-	</tr>
-<?
-
-$tabControl->EndCustomField('RECOMMENDED');
-
 
 
 $tabControl->Buttons([
