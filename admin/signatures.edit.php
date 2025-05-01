@@ -58,7 +58,7 @@ if ($isSavingOperation) {
 	$signatures = [];
 	$ar = explode("\n", $request->get('SIGNATURES'));
 	foreach ($ar as $val) {
-		$val = trim($val);
+		$val = ltrim($val);
 		if (!empty($val)) {
 			$signatures[] = $val;
 		}
