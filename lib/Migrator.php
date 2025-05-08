@@ -9,7 +9,7 @@ class Migrator
 {
 	static protected $instance = null;
 
-	protected array $migrations = [
+	protected $migrations = [
 		'1.1.0',
 	];
 
