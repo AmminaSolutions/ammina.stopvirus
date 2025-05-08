@@ -305,6 +305,11 @@ class Detector
 			}
 			break;
 		}
+		if (is_array($result['signatures'])) {
+			foreach ($result['signatures'] as $k => $signature) {
+				$result['signatures'][$k] = rtrim(ltrim($signature), "\n\r\t\v\0");
+			}
+		}
 		return $result;
 	}
 

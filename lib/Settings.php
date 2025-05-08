@@ -170,16 +170,21 @@ class Settings
 				$update = true;
 			}
 			if ($update) {
-				\CAdminNotify::Add(
-					[
-						//'MODULE_ID' => "",
-						//'TAG' => "",
-						'MESSAGE' => '<b>' . LangFile::message('UPDATE_TITLE') . '</b><br>' . LangFile::message('UPDATE_MESSAGE'),
-						'ENABLE_CLOSE' => "Y",
-						'PUBLIC_SECTION' => "N",
-						'NOTIFY_TYPE' => "M",
-					]
-				);
+				$mess = \CAdminNotify::GetList([], [
+					'TAG' => 'ammina.stopvirus.update',
+				])->Fetch();
+				if (!$mess) {
+					\CAdminNotify::Add(
+						[
+							//'MODULE_ID' => "",
+							'TAG' => 'ammina.stopvirus.update',
+							'MESSAGE' => '<b>' . LangFile::message('UPDATE_TITLE') . '</b><br>' . LangFile::message('UPDATE_MESSAGE'),
+							'ENABLE_CLOSE' => "Y",
+							'PUBLIC_SECTION' => "N",
+							'NOTIFY_TYPE' => "M",
+						]
+					);
+				}
 			}
 		}
 	}
